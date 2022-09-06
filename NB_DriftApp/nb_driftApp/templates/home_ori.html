@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for post in posts %}
+<section class="postsecWrapper border border-secondary position-sticky w-50 ms-2 mb-2">
+<div class="postdivWrapper">
+  <h2 class="article-title fixed-top">{{ post.headline }}</h2>
+  <div class="article-metadata">
+    <small class="text-muted">{{ post.date_posted }}</small>
+    <small class="text-muted">{{ post.author }}</small>
+  </div>
+   <article class="media content-section overflow-auto">
+    <div class="media-body ">
+      <p class="article-content">{{ post.msg_content|safe }}</p>
+    </div>
+  </article>
+  {% if current_user.is_authenticated %}
+  <div class="delete_btn">
+    <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#{{ post.id }}">Delete</button>
+  </div>
+  {% endif %}
+</div>
+</section>
+  <!-- Modal -->
+<div class="modal" id="{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="{{  url_for('delete_post', post_id=post.id) }}" method="POST">
+          <!--<input type="hidden" name="post_id" value="{{ post.id }}">-->
+          <input class="btn btn-danger" type="submit" value="Delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock content %}
